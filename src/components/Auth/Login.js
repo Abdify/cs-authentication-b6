@@ -1,10 +1,10 @@
 import React, { useContext, useState } from "react";
 import toast from "react-hot-toast";
+import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
 import { BiLogInCircle } from "react-icons/bi";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../contexts/auth.context";
 import "../../styles/login.css";
-
 
 const Login = () => {
   /**
@@ -17,7 +17,8 @@ const Login = () => {
   const { login, setUser } = useContext(AuthContext);
   const navigate = useNavigate();
   const location = useLocation();
-  
+  const [showPass, setShowPass] = useState(false);
+
   const [userInfo, setUserInfo] = useState({
     email: "",
     password: "",
@@ -26,31 +27,31 @@ const Login = () => {
   const [errors, setErrors] = useState({
     email: "",
     password: "",
-    general: ""
+    general: "",
   });
 
   const handleSubmit = (e) => {
     e.preventDefault();
     login(userInfo.email, userInfo.password)
-    .then(result => {
-      toast.success("success")
-      console.log(location.state.from)
-      navigate(location?.state?.from?.pathname);
-    })
-    .catch(err => {
-      console.log(err)
-      setErrors({...errors, general: err.message})
-    })
+      .then((result) => {
+        toast.success("success");
+        console.log(location.state.from);
+        navigate(location?.state?.from?.pathname);
+      })
+      .catch((err) => {
+        console.log(err);
+        setErrors({ ...errors, general: err.message });
+      });
   };
 
   const handleEmailChange = (e) => {
     const email = e.target.value;
 
-    if (!/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email)){
-      setErrors({...errors, email: "Please provide a valid email" })
+    if (!/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email)) {
+      setErrors({ ...errors, email: "Please provide a valid email" });
       setUserInfo({ ...userInfo, email: "" });
     } else {
-      setErrors({ ...errors, email: "" })
+      setErrors({ ...errors, email: "" });
       setUserInfo({ ...userInfo, email: e.target.value });
     }
   };
@@ -59,16 +60,16 @@ const Login = () => {
     const password = e.target.value;
     const lengthError = password.length < 6;
     const noSymbolError = !/[\!\@\#\$\%\^\&\*]{1,}/.test(password);
-    const noCapitalLetterError = !/[A-Z]{1,}/.test(password)
+    const noCapitalLetterError = !/[A-Z]{1,}/.test(password);
 
-    if(lengthError){
+    if (lengthError) {
       setErrors({ ...errors, password: "Must be at least 6 characters" });
-      setUserInfo({ ...userInfo, password: "" })
+      setUserInfo({ ...userInfo, password: "" });
     } else {
-      setErrors({...errors, password: "" })
-      setUserInfo({ ...userInfo, password: e.target.value })
+      setErrors({ ...errors, password: "" });
+      setUserInfo({ ...userInfo, password: e.target.value });
     }
-  }
+  };
 
   return (
     <div className="login-container">
@@ -86,14 +87,19 @@ const Login = () => {
         />
         {errors.email && <p className="error-message">{errors.email}</p>}
 
-        <input
-          type="password"
-          name="password"
-          placeholder="password"
-          // value={userInfo.password}
-          onChange={handlePasswordChange}
-        />
-        {errors.password && <p className="error-message">{errors.password}</p>}
+        <div className="relative">
+          <input
+            type={showPass ? "text" : "password"}
+            name="password"
+            placeholder="password"
+            // value={userInfo.password}
+            onChange={handlePasswordChange}
+          />
+          <div className="absolute right-5 top-5" onClick={() => setShowPass(!showPass)}>
+            {showPass ? <AiFillEyeInvisible /> : <AiFillEye />}
+          </div>
+          {errors.password && <p className="error-message">{errors.password}</p>}
+        </div>
         <button>Login</button>
         {errors.general && <p className="error-message">{errors.general}</p>}
         <p>
