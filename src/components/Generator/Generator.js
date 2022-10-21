@@ -1,9 +1,22 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
+import { useLoaderData, useNavigate } from "react-router-dom";
 import Color from "./Color";
 import "./Generator.css";
 
 
 const Generator = () => {
+
+    const response = useLoaderData();
+    console.log(response)
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        if(!response.success){
+            navigate("/");
+            toast.error(response.error)
+        }
+    }, [response])
 
     const [state, setState] = useState({
         colorsNum: 5,

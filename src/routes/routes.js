@@ -22,6 +22,7 @@ const routes = createBrowserRouter([
             <Generator />
           </PrivateRoute>
         ),
+        loader: () => fetch("http://localhost:5000/")
       },
       {
         path: "/login",
