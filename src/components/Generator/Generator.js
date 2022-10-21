@@ -4,6 +4,7 @@ import "./Generator.css";
 
 
 const Generator = () => {
+
     const [state, setState] = useState({
         colorsNum: 5,
         colors: [],
